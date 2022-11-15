@@ -7,27 +7,6 @@ import (
 	"log"
 )
 
-// func Userdata(db *sql.DB) ([]entity.User, error) {
-// 	result, errselect := db.Query("SELECT id,name,gender,status FROM users") // proses menjalankana query SQL
-
-// 	if errselect != nil { //handling error saat proses menjalankan query
-// 		return nil, errselect
-// 	}
-// 	var datausers []entity.User
-
-// 	for result.Next() {
-// 		var rowuser entity.User
-// 		errscan := result.Scan(&rowuser.Id, &rowuser.Nama, &rowuser.Gender, &rowuser.Status) //melakukan scanning data dari masing" row dan menyimpannya kedalam variabel yang dibuat sebelumny
-// 		if errscan != nil {                                                                  // handling ketika ada error pada saat proses scanning
-// 			// log.Fatal("eror scan", errscan.Error())
-// 			return nil, errscan
-// 		}
-// 		// fmt.Printf("id: %s, nama: %s, gender:%s, status%s\n", rowuser.id, rowuser.nama, rowuser.gender, rowuser.status) // menampilkan data hasil pembacaan dari db
-// 		datausers = append(datausers, rowuser)
-// 	}
-// 	return datausers, nil
-// }
-
 func Register(db *sql.DB, newUser entity.User) (sql.Result, error) {
 
 	var query = "INSERT INTO user(nama_user,email,phone,alamat,foto_profil,kata_sandi) VALUES (?,?,?,?,?,?)"
@@ -51,23 +30,16 @@ func Register(db *sql.DB, newUser entity.User) (sql.Result, error) {
 	return result, nil
 }
 
-// func Update(db *sql.DB, update entity.User) (sql.Result, error) {
-// 	var query = "UPDATE users set name = ?, gender = ?, status = ? where id = ?"
-// 	statement, errPrepare := db.Prepare(query)
-// 	if errPrepare != nil {
-// 		log.Fatal("erorr prepare update", errPrepare.Error())
-// 	}
-// 	result, errExec := statement.Exec(update.Nama, update.Gender, update.Status, update.Id)
+func Readsdata(db *sql.DB, id int) (entity.User, error) {
+	res := db.QueryRow("SELECT Id_user,Nama_user,phone,alamat,foto_profil from user where id_user=?", id)
+	var barisUser entity.User
 
-// 	if errExec != nil {
-// 		log.Fatal("erorr Exec update", errExec.Error())
-// 	} else {
-// 		row, _ := result.RowsAffected()
-// 		if row > 0 {
-// 			fmt.Println("berhasil")
-// 		} else {
-// 			fmt.Println("gagal")
-// 		}
-// 	}
-// 	return result, nil
-// }
+	errscan := res.Scan(&barisUser.Id, &barisUser.Nama, &barisUser.Phone, &barisUser.Alamat, &barisUser.Foto_profil)
+
+	if errscan != nil {
+		if errscan == sql.ErrNoRows {
+			log.Fatal("error scan", errscan.Error())
+		}
+	}
+	return barisUser, nil
+}

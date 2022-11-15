@@ -5,6 +5,7 @@ import (
 	"fajars/rowsql/controllers"
 	entity "fajars/rowsql/entity"
 	"fmt"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -15,7 +16,7 @@ func main() {
 	defer db.Close() // menutup koneksi
 
 	//buat mekanisme menu
-	fmt.Println("MENU:\n1. register\n2. Login\n3. update\n4. delete")
+	fmt.Println("MENU:\n1. register\n2. Login\n3. read\n4. update\n5. delete ")
 	fmt.Println("Masukkan pilihan anda:")
 	var pilihan int
 	fmt.Scanln(&pilihan)
@@ -65,17 +66,17 @@ func main() {
 		}
 	case 3:
 		{
-			// update := entity.User{}
-			// fmt.Println("update id yang akan diubah")
-			// fmt.Scanln(&update.Id)
-			// fmt.Println("Update nama User")
-			// fmt.Scanln(&update.Nama)
-			// fmt.Println("Update gender User")
-			// fmt.Scanln(&update.Gender)
-			// fmt.Println("Update status User")
-			// fmt.Scanln(&update.Status)
+			var id int
+			fmt.Println("silahkan masukkan id")
+			fmt.Scan(&id)
 
-			// controllers.Update(db, update)
+			dataUser, errGetId := controllers.Readsdata(db, id)
+
+			if errGetId != nil {
+				log.Fatal("id tidak ada", errGetId.Error())
+			}
+
+			fmt.Printf("id : %d\n Nama User : %s \n Phone : %s\n Alamat : %s\n foto_profil :", dataUser.Id, dataUser.Nama, dataUser.Phone, dataUser.Alamat, dataUser.Foto_profil)
 		}
 
 	case 4:
