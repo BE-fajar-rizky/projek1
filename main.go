@@ -51,18 +51,39 @@ func main() {
 		}
 	case 2:
 		{
+			var phone int
+			fmt.Println("silahkan masukkan username anda:")
+			fmt.Scan(&phone)
+			var kata_sandi int
+			fmt.Println("silahkan masukkan username anda:")
+			fmt.Scan(&kata_sandi)
 
-			// newUser := entity.User{}
-
-			// fmt.Println("masukkan nama user")
-			// fmt.Scanln(&newUser.Nama)
-			// fmt.Println("masukkan email anda")
-			// fmt.Scanln(&newUser.Email)
-			// fmt.Println("masukkan status user")
-			// fmt.Scanln(&newUser.P)
-
-			// controllers.InsertData(db, newUser)
-
+			dataUser, errGetId := controllers.loginUser(db, phone, kata_sandi)
+			loginUser := entity.User{}
+			//buat mekanisme login
+			fmt.Println("LOGIN:\n1. username\n2. Password")
+			fmt.Println("Masukkan akun anda:")
+			fmt.Println("1.masukkan username anda")
+			fmt.Scanln(&loginUser.Phone)
+			fmt.Println("masukkan kata sandi anda")
+			fmt.Scanln(&loginUser.kata_sandi)
+			var query = "LOGIN Users set Phone = ?, kata sandi = ? "
+			statement, errPrepare := db.Prepare(query)
+			if errPrepare != nil {
+				log.Fatal("error prepare", errPrepare.Error())
+			}
+			result, errExec := statement.Exec(loginUser.Phone, loginUser.kata_sandi)
+			if errExec != nil {
+				log.Fatal("error exec", errExec.Error())
+			} else {
+				row, _ := result.RowsAffected()
+				if row > 0 {
+					fmt.Println("LOGIN berhasil")
+				} else {
+					fmt.Println("LOGIN gagal")
+				}
+			}
+			fmt.Println("LOGIN")
 		}
 	case 3:
 		{
@@ -81,7 +102,39 @@ func main() {
 
 	case 4:
 		{
-			fmt.Println("delete")
+			updateUser := entity.user{}
+			fmt.Println("masukkan id user yang akan diupdate :")
+			fmt.Scanln(&updateUser.Id_user)
+			fmt.Println("masukkan nama user")
+			fmt.Scanln(&updateUser.Nama_user)
+			fmt.Println("masukkan Email user")
+			fmt.Scanln(&updateUser.Email)
+			fmt.Println("masukkan Phone user")
+			fmt.Scanln(&updateUser.Phone)
+			fmt.Println("masukkan alamat user")
+			fmt.Scanln(&updateUser.alamat)
+			fmt.Println("masukkan Foto profil user")
+			fmt.Scanln(&updateUser.foto_profil)
+			fmt.Println("masukkan kata sandi user")
+			fmt.Scanln(&updateUser.kata_sandi)
+
+			var query = "UPDATE Users set name = ?, Email = ?, Phone = ?, Alamat = ?, Foto Profil = ?, kata sandi = ? "
+			statement, errPrepare := db.Prepare(query)
+			if errPrepare != nil {
+				log.Fatal("error prepare", errPrepare.Error())
+			}
+			result, errExec := statement.Exec(updateUser.Id_user, updateUser.Nama_user, updateUser.Email, updateUser.Phone, updateUser.alamat, updateUser.foto_profil, updateUser.kata_sandi)
+			if errExec != nil {
+				log.Fatal("error exec", errExec.Error())
+			} else {
+				row, _ := result.RowsAffected()
+				if row > 0 {
+					fmt.Println("UPDATE berhasil")
+				} else {
+					fmt.Println("UPDATE gagal")
+				}
+			}
+			fmt.Println("update")
 		}
 
 	case 5:
