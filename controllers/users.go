@@ -30,14 +30,14 @@ import (
 
 func Register(db *sql.DB, newUser entity.User) (sql.Result, error) {
 
-	var query = "INSERT INTO user(nama_user,email,phone,kata_sandi) VALUES (?,?,?,?)"
+	var query = "INSERT INTO user(nama_user,email,phone,alamat,foto_profil,kata_sandi) VALUES (?,?,?,?,?,?)"
 	statement, errPrepare := db.Prepare(query)
 
 	if errPrepare != nil {
 		log.Fatal("erorr prepare insert", errPrepare.Error())
 
 	}
-	result, errExec := statement.Exec(newUser.Nama, newUser.Email, newUser.Phone, newUser.Kata_sandi)
+	result, errExec := statement.Exec(newUser.Nama, newUser.Email, newUser.Phone, newUser.Alamat, newUser.Foto_profil, newUser.Kata_sandi)
 	if errExec != nil {
 		log.Fatal("erorr Exec insert", errExec.Error())
 	} else {

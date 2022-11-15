@@ -15,7 +15,7 @@ func main() {
 	defer db.Close() // menutup koneksi
 
 	//buat mekanisme menu
-	fmt.Println("MENU:\n1. register\n2. Login\n3. update\n4. regis")
+	fmt.Println("MENU:\n1. register\n2. Login\n3. update\n4. delete")
 	fmt.Println("Masukkan pilihan anda:")
 	var pilihan int
 	fmt.Scanln(&pilihan)
@@ -39,6 +39,10 @@ func main() {
 			fmt.Scanln(&newUser.Email)
 			fmt.Println("masukkan No Hp anda")
 			fmt.Scanln(&newUser.Phone)
+			fmt.Println("masukkan alamat anda")
+			fmt.Scanln(&newUser.Alamat)
+			fmt.Println("masukkan foto anda")
+			fmt.Scanln(&newUser.Foto_profil)
 			fmt.Println("masukkan kata sandi anda")
 			fmt.Scanln(&newUser.Kata_sandi)
 
