@@ -66,12 +66,12 @@ func main() {
 			} else {
 				row, _ := result.RowsAffected()
 				if row > 0 {
-					fmt.Println("UPDATE berhasil")
+					fmt.Println("LOGIN berhasil")
 				} else {
-					fmt.Println("UPDATE gagal")
+					fmt.Println("LOGIN gagal")
 				}
 			}
-			fmt.Println("update")
+			fmt.Println("LOGIN")
 		}
 	// 		}
 	// newUser := entity.User{}
