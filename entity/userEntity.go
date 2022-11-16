@@ -7,5 +7,5 @@ type User struct {
 	Phone       string
 	Alamat      string
 	Foto_profil string
-	kata_sandi  string
+	Kata_sandi  string
 }
