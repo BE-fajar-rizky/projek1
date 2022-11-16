@@ -29,28 +29,19 @@ func Register(db *sql.DB, newUser entity.User) (sql.Result, error) {
 	}
 	return result, nil
 }
-func loginUser(db *sql.DB, id int, Phone string, kata_sandi string) (entity.User, error) {
-	res := db.QueryRow("SELECT Id_user,Nama_user,phone,alamat,foto_profil, kata_sandi from user where id_user=?", id, Phone, kata_sandi)
-	var barisUser entity.User
-
-	errscan := res.Scan(&barisUser.Phone, &barisUser.kata_sandi)
-	statement, errPrepare := db.Prepare(errscan)
-
-	if errPrepare != nil {
-		log.Fatal("erorr prepare insert", errPrepare.Error())
+func LoginUser(db *sql.DB, user entity.User) (entity.User, error) {
+	statm, err := db.Query("SELECT Id, Phone, kata_sandi FROM users WHERE phone = ? AND kata_sandi = ?") //PREPARE MENYIAPKAN KODE YG AKAN DI EKSEKUSI DI SQL
+	if err != nil {
+		log.Fatal("error select ", err.Error())
 	}
-	result, errExec := statement.Exec(loginUser.Phone, loginUser.kata_sandi)
-	if errExec != nil {
-		log.Fatal("erorr Exec insert", errExec.Error())
-	} else {
-		row, _ := result.RowsAffected()
-		if row > 0 {
-			fmt.Println("LOGIN berhasil")
-		} else {
-			fmt.Println("LOGIN gagal")
+	var row entity.User
+	for statm.Next() {
+		errs := statm.Scan(&row.Phone, &row.Kata_sandi)
+		if errs != nil {
+			log.Fatal("error scan ", errs.Error())
 		}
 	}
-	return result, nil
+	return row, nil
 }
 
 func Readsdata(db *sql.DB, id int) (entity.User, error) {
@@ -66,9 +57,9 @@ func Readsdata(db *sql.DB, id int) (entity.User, error) {
 	}
 	return barisUser, nil
 }
-func updateUser(db *sql.DB, newUser entity.User) (sql.Result, error) {
-	res := db.QueryRow("SELECT Id_user,Nama_user,phone,alamat,foto_profil from user where id_user=?", id)
-	var barisUser entity.User
+func UpdateUser(db *sql.DB, newUser entity.User) (sql.Result, error) {
+	// res := db.QueryRow("SELECT Id_user,Nama_user,phone,alamat,foto_profil from user where id_user=?", id)
+	// var barisUser entity.User
 	var query = "INSERT INTO user(nama_user,email,phone,alamat,foto_profil,kata_sandi) VALUES (?,?,?,?,?,?)"
 	statement, errPrepare := db.Prepare(query)
 
