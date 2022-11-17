@@ -165,3 +165,13 @@ func DeleteAkun(db *sql.DB, phone string) (sql.Result, error) {
 
 	return result, nil
 }
+func Search_Profil(db *sql.DB, search entity.User) (entity.User, error) {
+	statm := db.QueryRow("SELECT Id_user, Nama_user, Phone, Alamat, Kata_sandi FROM user WHERE phone = ?", search.Phone)
+
+	var row entity.User
+	errs := statm.Scan(&row.Id, &row.Nama, &row.Phone, &row.Alamat, &row.Kata_sandi)
+	if errs != nil {
+		log.Fatal("Error Search ", errs.Error())
+	}
+	return row, nil
+}
