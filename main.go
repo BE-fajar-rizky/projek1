@@ -89,8 +89,7 @@ func main() {
 			case 2:
 				{
 					updateUser := entity.User{}
-					fmt.Println("masukkan id user yang akan diupdate :")
-					fmt.Scanln(&updateUser.Id)
+
 					fmt.Println("masukkan nama user")
 					fmt.Scanln(&updateUser.Nama)
 					fmt.Println("masukkan Email user")
@@ -102,7 +101,7 @@ func main() {
 					fmt.Println("masukkan kata sandi user")
 					fmt.Scanln(&updateUser.Kata_sandi)
 
-					dataUser, errUpdate := controllers.UpdateUser(db, updateUser)
+					dataUser, errUpdate := controllers.UpdateUser(db, updateUser, data.Phone)
 					if errUpdate != nil {
 						log.Fatal("error gagal", errUpdate.Error())
 					}
@@ -110,6 +109,11 @@ func main() {
 				}
 			case 3:
 				{
+					var nophone string
+					fmt.Println("Masukkan Phone yang akan di delete : ")
+					fmt.Scanln(&nophone)
+
+					controllers.DeleteAkun(db, nophone)
 
 					// transfer := entity.Transfers{}
 					// fmt.Println("masukkan jumlah transfer :")

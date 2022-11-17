@@ -55,15 +55,15 @@ func Readsdata(db *sql.DB, id int) (entity.User, error) {
 	}
 	return barisUser, nil
 }
-func UpdateUser(db *sql.DB, update entity.User) (sql.Result, error) {
+func UpdateUser(db *sql.DB, update entity.User, Phone string) (sql.Result, error) {
 	// res := db.QueryRow("SELECT Id_user,Nama_user,phone,alamat,foto_profil from user where id_user=?", id)
 	// var barisUser entity.User
-	var query = "UPDATE user set Nama_user = ?, email = ?, phone = ?,alamat = ? ,kata_sandi = ?  where Id_user = ?"
+	var query = "UPDATE user set Nama_user = ?, email = ?, phone = ?,alamat = ? ,kata_sandi = ?  where phone = ? "
 	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		log.Fatal("erorr prepare update", errPrepare.Error())
 	}
-	result, errExec := statement.Exec(update.Nama, update.Email, update.Phone, update.Alamat, update.Kata_sandi, update.Id)
+	result, errExec := statement.Exec(update.Nama, update.Email, update.Phone, update.Alamat, update.Kata_sandi, Phone)
 
 	if errExec != nil {
 		log.Fatal("erorr Exec update", errExec.Error())
@@ -112,4 +112,24 @@ func TfUser(db *sql.DB, total entity.Transfers, id int) (entity.User, error) {
 	}
 	return rowUser, nil
 
+}
+func DeleteAkun(db *sql.DB, phone string) (sql.Result, error) {
+	var query = "DELETE FROM user where phone = ?"
+	statement, errPrepare := db.Prepare(query)
+	if errPrepare != nil {
+		log.Fatal("prepare error", errPrepare.Error())
+	}
+	result, ErrExec := statement.Exec(phone)
+	if ErrExec != nil {
+		log.Fatal("error exec", ErrExec.Error())
+	} else {
+		row, _ := result.RowsAffected()
+		if row > 0 {
+			fmt.Println("Delete berhasil")
+		} else {
+			fmt.Println("Delete gagal")
+		}
+	}
+
+	return result, nil
 }
