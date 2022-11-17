@@ -110,6 +110,27 @@ func main() {
 				}
 			case 3:
 				{
+
+					// transfer := entity.Transfers{}
+					// fmt.Println("masukkan jumlah transfer :")
+					// fmt.Scanln(&transfer.Jumlah_TF)
+					// fmt.Println("masukkan nama hanphone yang akan di kirim")
+					// fmt.Scanln(&transfer.Phone)
+
+					// controllers.TfUser(db, transfer, data.Id)
+				}
+			case 4:
+				{
+					// transfer := entity.Transfers{}
+					// fmt.Println("masukkan jumlah transfer :")
+					// fmt.Scanln(&transfer.Jumlah_TF)
+					// fmt.Println("masukkan nama hanphone yang akan di kirim")
+					// fmt.Scanln(&transfer.Phone)
+
+					// controllers.TfUser(db, transfer, data.Id)
+				}
+			case 5:
+				{
 					transfer := entity.Transfers{}
 					fmt.Println("masukkan jumlah transfer :")
 					fmt.Scanln(&transfer.Jumlah_TF)
