@@ -30,16 +30,14 @@ func Register(db *sql.DB, newUser entity.User) (sql.Result, error) {
 	return result, nil
 }
 func LoginUser(db *sql.DB, user entity.User) (entity.User, error) {
-	statm, err := db.Query("SELECT Id, Phone, kata_sandi FROM users WHERE phone = ? AND kata_sandi = ?") //PREPARE MENYIAPKAN KODE YG AKAN DI EKSEKUSI DI SQL
-	if err != nil {
-		log.Fatal("error select ", err.Error())
-	}
+	statm := db.QueryRow("SELECT Id_user,phone,kata_sandi FROM user WHERE phone = ? AND kata_sandi = ?", user.Phone, user.Kata_sandi)
+
 	var row entity.User
-	for statm.Next() {
-		errs := statm.Scan(&row.Phone, &row.Kata_sandi)
-		if errs != nil {
-			log.Fatal("error scan ", errs.Error())
-		}
+	errs := statm.Scan(&row.Id, &row.Phone, &row.Kata_sandi)
+	//  bcrypt.GenerateFromPassword(, bcrypt.DefaultCost))
+
+	if errs != nil {
+		log.Fatal("Maaf No Telfon atau Password salah ")
 	}
 	return row, nil
 }
@@ -57,17 +55,45 @@ func Readsdata(db *sql.DB, id int) (entity.User, error) {
 	}
 	return barisUser, nil
 }
-func UpdateUser(db *sql.DB, newUser entity.User) (sql.Result, error) {
+func UpdateUser(db *sql.DB, update entity.User) (sql.Result, error) {
 	// res := db.QueryRow("SELECT Id_user,Nama_user,phone,alamat,foto_profil from user where id_user=?", id)
 	// var barisUser entity.User
-	var query = "INSERT INTO user(nama_user,email,phone,alamat,foto_profil,kata_sandi) VALUES (?,?,?,?,?,?)"
+	var query = "UPDATE user set Nama_user = ?, email = ?, phone = ?,alamat = ? ,kata_sandi = ?  where Id_user = ?"
 	statement, errPrepare := db.Prepare(query)
+	if errPrepare != nil {
+		log.Fatal("erorr prepare update", errPrepare.Error())
+	}
+	result, errExec := statement.Exec(update.Nama, update.Email, update.Phone, update.Alamat, update.Kata_sandi, update.Id)
 
+	if errExec != nil {
+		log.Fatal("erorr Exec update", errExec.Error())
+	} else {
+		row, _ := result.RowsAffected()
+		if row > 0 {
+			fmt.Println("berhasil")
+		} else {
+			fmt.Println("gagal")
+		}
+	}
+	return result, nil
+}
+
+func TfUser(db *sql.DB, total entity.Transfers, id int) (entity.User, error) {
+	usr := db.QueryRow("SELECT Id_user, Nama_user,phone from user where phone=?", total.Phone)
+	// usr2 := db.QueryRow("SELECT Id_user, Nama_user,phone from user where id=?", id)
+	// var barisUser entity.User
+	// errscan2:= usr2.Scan(&barisUser.Id,&barisUser.Nama)
+	var rowUser entity.User
+	errscan := usr.Scan(&rowUser.Id, &rowUser.Nama, &rowUser.Phone)
+	fmt.Println(rowUser.Id)
+	var query = "INSERT INTO transfers(pengirim_id,Jumlah_TF,penerima_id) VALUES (?,?,?)"
+	statement, errPrepare := db.Prepare(query)
 	if errPrepare != nil {
 		log.Fatal("erorr prepare insert", errPrepare.Error())
 
 	}
-	result, errExec := statement.Exec(newUser.Nama, newUser.Email, newUser.Phone, newUser.Alamat, newUser.Foto_profil, newUser.Kata_sandi)
+
+	result, errExec := statement.Exec(id, total.Jumlah_TF, rowUser.Id)
 	if errExec != nil {
 		log.Fatal("erorr Exec insert", errExec.Error())
 	} else {
@@ -78,5 +104,12 @@ func UpdateUser(db *sql.DB, newUser entity.User) (sql.Result, error) {
 			fmt.Println("gagal")
 		}
 	}
-	return result, nil
+
+	if errscan != nil {
+		if errscan == sql.ErrNoRows {
+			log.Fatal("error scan", errscan.Error())
+		}
+	}
+	return rowUser, nil
+
 }
