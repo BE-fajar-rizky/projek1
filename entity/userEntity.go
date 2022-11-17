@@ -9,7 +9,17 @@ type User struct {
 	Foto_profil string
 	Kata_sandi  string
 }
+type Top_up struct {
+	Id_Tp        int
+	Nama         string
+	Phone        string
+	Jumlah_TopUP int
+}
 
+type TopUp struct {
+	Phone      string
+	Jumlah_TUP int
+}
 type Transfer struct {
 	Id_Tf       int
 	id_penerima int
