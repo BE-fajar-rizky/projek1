@@ -115,13 +115,6 @@ func main() {
 
 					controllers.DeleteAkun(db, nophone)
 
-					// transfer := entity.Transfers{}
-					// fmt.Println("masukkan jumlah transfer :")
-					// fmt.Scanln(&transfer.Jumlah_TF)
-					// fmt.Println("masukkan nama hanphone yang akan di kirim")
-					// fmt.Scanln(&transfer.Phone)
-
-					// controllers.TfUser(db, transfer, data.Id)
 				}
 			case 4:
 				{
@@ -143,24 +136,28 @@ func main() {
 
 					controllers.TfUser(db, transfer, data.Id)
 				}
-				// case 3:
-				// 	{
-				// 		fmt.Println("HALO SUB MENU 3")
-				// 	}
-				// case 4:
-				// 	{
-				// 		fmt.Println("HALO SUB MENU 4")
-				// 	}
-				// case 5:
-				// 	{
-				// 		transfer := entity.Transfers{}
-				// 		fmt.Println("masukkan jumlah transfer :")
-				// 		fmt.Scanln(&transfer.Jumlah_TF)
-				// 		fmt.Println("masukkan nama hanphone yang akan di kirim")
-				// 		fmt.Scanln(&transfer.Phone)
 
-				// 		controllers.TfUser(db, transfer, data.Id)
-				// 	}
+			case 6:
+				{
+					fmt.Println("History topup")
+				}
+
+			case 7:
+				{
+					fmt.Println("History transfer")
+				}
+			case 8:
+				{
+					var row entity.User
+					var err error
+					fmt.Println("masukkan nomor hanphone yang akan dilihat")
+					fmt.Scanln(&row.Phone)
+					data, err = controllers.Search_Profil(db, row)
+					if err != nil {
+						log.Fatal("error gagal", err.Error())
+					}
+					fmt.Println("Pencarian berhasil", data)
+				}
 			}
 		}
 	}
