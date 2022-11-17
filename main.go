@@ -16,11 +16,11 @@ func main() {
 	defer db.Close() // menutup koneksi
 
 	//buat mekanisme menu
-	fmt.Println("MENU:\n1. register\n2. Login\n3. read\n4. update\n5. delete ")
+	fmt.Println("MENU:\n1. register\n2. Login  ")
 	fmt.Println("Masukkan pilihan anda:")
 	var pilihan int
 	fmt.Scanln(&pilihan)
-
+	var data entity.User
 	switch pilihan {
 	case 1:
 		{
@@ -53,62 +53,90 @@ func main() {
 		{
 			var row entity.User
 			//buat mekanisme login
-
-			fmt.Println("masukkan nama user")
+			var err error
+			fmt.Println("masukkan phone anda")
 			fmt.Scanln(&row.Phone)
 			fmt.Println("masukkan Kata Sandi anda")
 			fmt.Scanln(&row.Kata_sandi)
-			dataLogin, err := controllers.LoginUser(db, row)
+			data, err = controllers.LoginUser(db, row)
 			if err != nil {
 				log.Fatal("error gagal", err.Error())
 			}
-			fmt.Println("Login berhasil", dataLogin)
+			fmt.Println("Login berhasil", data)
 		}
-	case 3:
-		{
-			var id int
-			fmt.Println("silahkan masukkan id")
-			fmt.Scan(&id)
+		fmt.Println("halo menu utama 2")
+		runis := true
+		for runis {
+			fmt.Print("SUB MENU:\n1. Read Account \n2. Update Account \n3. Delete Account \n4. Top-Up \n5. Transfer \n6. History Top-Up \n7. History Transfer \n8. Melihat Profil user lain \n9. Keluar\n")
+			fmt.Println("Masukkan Pilihan Anda ")
+			var choice2 int
+			fmt.Scanln(&choice2)
+			switch choice2 {
+			case 1:
+				{
+					var id int
+					fmt.Println("silahkan masukkan id")
+					fmt.Scan(&id)
 
-			dataUser, errGetId := controllers.Readsdata(db, id)
+					dataUser, errGetId := controllers.Readsdata(db, id)
 
-			if errGetId != nil {
-				log.Fatal("id tidak ada", errGetId.Error())
+					if errGetId != nil {
+						log.Fatal("id tidak ada", errGetId.Error())
+					}
+
+					fmt.Printf("id : %d\n Nama User : %s \n Phone : %s\n Alamat : %s\n foto_profil :", dataUser.Id, dataUser.Nama, dataUser.Phone, dataUser.Alamat, dataUser.Foto_profil)
+				}
+			case 2:
+				{
+					updateUser := entity.User{}
+					fmt.Println("masukkan id user yang akan diupdate :")
+					fmt.Scanln(&updateUser.Id)
+					fmt.Println("masukkan nama user")
+					fmt.Scanln(&updateUser.Nama)
+					fmt.Println("masukkan Email user")
+					fmt.Scanln(&updateUser.Email)
+					fmt.Println("masukkan phone")
+					fmt.Scanln(&updateUser.Phone)
+					fmt.Println("masukkan alamat user")
+					fmt.Scanln(&updateUser.Alamat)
+					fmt.Println("masukkan kata sandi user")
+					fmt.Scanln(&updateUser.Kata_sandi)
+
+					dataUser, errUpdate := controllers.UpdateUser(db, updateUser)
+					if errUpdate != nil {
+						log.Fatal("error gagal", errUpdate.Error())
+					}
+					fmt.Println("Update berhasil", dataUser)
+				}
+			case 3:
+				{
+					transfer := entity.Transfers{}
+					fmt.Println("masukkan jumlah transfer :")
+					fmt.Scanln(&transfer.Jumlah_TF)
+					fmt.Println("masukkan nama hanphone yang akan di kirim")
+					fmt.Scanln(&transfer.Phone)
+
+					controllers.TfUser(db, transfer, data.Id)
+				}
+				// case 3:
+				// 	{
+				// 		fmt.Println("HALO SUB MENU 3")
+				// 	}
+				// case 4:
+				// 	{
+				// 		fmt.Println("HALO SUB MENU 4")
+				// 	}
+				// case 5:
+				// 	{
+				// 		transfer := entity.Transfers{}
+				// 		fmt.Println("masukkan jumlah transfer :")
+				// 		fmt.Scanln(&transfer.Jumlah_TF)
+				// 		fmt.Println("masukkan nama hanphone yang akan di kirim")
+				// 		fmt.Scanln(&transfer.Phone)
+
+				// 		controllers.TfUser(db, transfer, data.Id)
+				// 	}
 			}
-
-			fmt.Printf("id : %d\n Nama User : %s \n Phone : %s\n Alamat : %s\n foto_profil :", dataUser.Id, dataUser.Nama, dataUser.Phone, dataUser.Alamat, dataUser.Foto_profil)
 		}
-
-	case 4:
-		{
-			updateUser := entity.User{}
-			fmt.Println("masukkan id user yang akan diupdate :")
-			fmt.Scanln(&updateUser.Id)
-			fmt.Println("masukkan nama user")
-			fmt.Scanln(&updateUser.Nama)
-			fmt.Println("masukkan Email user")
-			fmt.Scanln(&updateUser.Email)
-			fmt.Println("masukkan Phone user")
-			fmt.Scanln(&updateUser.Phone)
-			fmt.Println("masukkan alamat user")
-			fmt.Scanln(&updateUser.Alamat)
-			fmt.Println("masukkan Foto profil user")
-			fmt.Scanln(&updateUser.Foto_profil)
-			fmt.Println("masukkan kata sandi user")
-			fmt.Scanln(&updateUser.Kata_sandi)
-
-			dataUser, errUpdate := controllers.UpdateUser(db, updateUser)
-			if errUpdate != nil {
-				log.Fatal("error gagal", errUpdate.Error())
-			}
-			fmt.Println("Update berhasil", dataUser)
-		}
-
-	case 5:
-		{
-			fmt.Println("baca data by id")
-		}
-
 	}
-
 }

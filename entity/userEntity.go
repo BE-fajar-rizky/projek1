@@ -9,3 +9,15 @@ type User struct {
 	Foto_profil string
 	Kata_sandi  string
 }
+
+type Transfer struct {
+	Id_Tf       int
+	id_penerima int
+	Jumlah_TF   int
+	id_pengirim int
+}
+
+type Transfers struct {
+	Jumlah_TF int
+	Phone     string
+}
