@@ -125,13 +125,13 @@ func main() {
 				}
 			case 4:
 				{
-					// transfer := entity.Transfers{}
-					// fmt.Println("masukkan jumlah transfer :")
-					// fmt.Scanln(&transfer.Jumlah_TF)
-					// fmt.Println("masukkan nama hanphone yang akan di kirim")
-					// fmt.Scanln(&transfer.Phone)
+					TopUp := entity.Top_up{}
+					fmt.Println("masukkan jumlah topup :")
+					fmt.Scanln(&TopUp.Jumlah_TopUP)
+					fmt.Println("masukkan nomor hanphone yang akan di topup")
+					fmt.Scanln(&TopUp.Phone)
 
-					// controllers.TfUser(db, transfer, data.Id)
+					controllers.Top_up(db, TopUp, data.Id)
 				}
 			case 5:
 				{
